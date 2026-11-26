@@ -3,8 +3,8 @@ import {
   AlertTriangle, ArrowDownRight, ArrowUpRight, Calculator, Car, Check,
   ChevronDown, ChevronUp, CreditCard, DollarSign, FileText, Gamepad2,
   GraduationCap, HandCoins, HeartPulse, History, Home, Landmark, Lightbulb,
-  LogOut, Pencil, PiggyBank, Plus, Repeat, Search, Shirt, ShoppingCart,
-  Smartphone, Tag, Trash2, Wallet, X,
+  LogOut, Mic, Pencil, PiggyBank, Plus, Repeat, Search, Send, Shirt,
+  ShoppingCart, Smartphone, Sparkles, Square, Tag, Trash2, Wallet, X,
 } from "lucide-react-native";
 
 /**
@@ -20,8 +20,8 @@ const LUCIDE = {
   AlertTriangle, ArrowDownRight, ArrowUpRight, Calculator, Car, Check,
   ChevronDown, ChevronUp, CreditCard, DollarSign, FileText, Gamepad2,
   GraduationCap, HandCoins, HeartPulse, History, Home, Landmark, Lightbulb,
-  LogOut, Pencil, PiggyBank, Plus, Repeat, Search, Shirt, ShoppingCart,
-  Smartphone, Tag, Trash2, Wallet, X,
+  LogOut, Mic, Pencil, PiggyBank, Plus, Repeat, Search, Send, Shirt,
+  ShoppingCart, Smartphone, Sparkles, Square, Tag, Trash2, Wallet, X,
 };
 
 /* ---------- ícones de marca ----------

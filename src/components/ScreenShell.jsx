@@ -11,6 +11,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Icon } from "./Icon";
 import { ErrorState, LoadingState } from "./ui";
+import { AssistantFab, FAB_SIZE } from "./AssistantFab";
 import { useMonth } from "../state/MonthContext";
 import { monthLabel } from "../lib/format";
 import { colors, font, radius, spacing, TOUCH_TARGET } from "../lib/theme";
@@ -62,6 +63,8 @@ export function ScreenShell({
         {loading && !error ? <LoadingState /> : null}
         {!loading && !error ? children : null}
       </ScrollView>
+
+      <AssistantFab />
     </SafeAreaView>
   );
 }
@@ -140,7 +143,13 @@ const st = StyleSheet.create({
   },
   monthText: { fontSize: font.sm, color: colors.textMuted },
 
-  content: { padding: spacing.lg, paddingTop: 0, gap: spacing.lg, paddingBottom: spacing.xxl },
+  // Folga embaixo para o botão flutuante da assistente não cobrir a última linha.
+  content: {
+    padding: spacing.lg,
+    paddingTop: 0,
+    gap: spacing.lg,
+    paddingBottom: FAB_SIZE + spacing.lg * 2,
+  },
 
   backdrop: { flex: 1, backgroundColor: "rgba(15,23,42,0.35)" },
   sheet: {
