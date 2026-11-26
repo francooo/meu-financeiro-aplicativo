@@ -4,10 +4,13 @@
  * ESTADO DE DEPENDÊNCIA — importante ao rodar o app hoje:
  *
  *   [OK]     leituras (GET) e as rotas de auth já existem na API em produção.
- *   [FASE A] escritas granulares (POST/PATCH/DELETE por item) dependem do
- *            trabalho de backend descrito no plano, feito no repositório do web.
- *            Até lá elas devolvem 404 — o cliente reporta isso com mensagem
- *            clara em vez de quebrar com erro de parse.
+ *   [CRIAR]  criação de UM item (POST /api/expenses, /incomes, /wishlist,
+ *            /shopping) existe na branch `assistente-web` do repositório do
+ *            web; vale em produção quando ela for mergeada. Exige que o mês já
+ *            exista (senão 404) e devolve { ok, id, created }.
+ *   [FASE A] as demais escritas granulares (PATCH/DELETE/reorder por item)
+ *            ainda não existem. Até lá devolvem 404 — o cliente reporta isso
+ *            com mensagem clara em vez de quebrar com erro de parse.
  *
  * Nenhuma regra de negócio mora aqui. Recorrência, parcelas e propagação entre
  * meses são decididas pelo servidor (server/db.js::createMonth).
@@ -52,7 +55,7 @@ export const getPaymentMethods = () => api.get("/api/payment-methods");
 /* ---------- gastos ---------- */
 
 /**
- * [FASE A] O `id` é gerado pelo cliente e enviado no corpo.
+ * [CRIAR] O `id` é gerado pelo cliente e enviado no corpo.
  *
  * Isso é o que torna o create idempotente: a API faz ON CONFLICT DO NOTHING, e
  * um reenvio com o MESMO id devolve a linha existente em vez de duplicar. É a
@@ -107,6 +110,28 @@ export const deleteShoppingItem = (id) => api.del(`/api/shopping/${id}`);
  * cliente. Assim um item criado no outro dispositivo há 2 segundos sobrevive.
  */
 export const clearDoneShoppingItems = (list) => api.del(`/api/shopping/done${qs({ list })}`);
+
+/* ---------- assistente ---------- */
+
+/**
+ * [FASE B] Assistente financeira. A chamada à Groq acontece NA API, que guarda
+ * GROQ_API_KEY nas variáveis da Vercel; a chave nunca entra no app
+ * (invariante 2). Até o backend ser publicado, estas rotas respondem 404.
+ *
+ * A API só PROPÕE: devolve `{ reply, proposal? }`. Quem grava é o app, pelas
+ * mesmas rotas granulares de sempre, depois da confirmação do usuário.
+ */
+const ASSISTANT_TIMEOUT_MS = 30000;
+
+export const assistantChat = ({ messages, month, today }) =>
+  api.post("/api/assistant/chat", { messages, month, today }, { timeout: ASSISTANT_TIMEOUT_MS });
+
+/** `uri` é o arquivo .m4a gravado pelo expo-audio. Devolve `{ text }`. */
+export const assistantTranscribe = (uri) => {
+  const form = new FormData();
+  form.append("audio", { uri, name: "audio.m4a", type: "audio/m4a" });
+  return api.post("/api/assistant/transcribe", form, { timeout: ASSISTANT_TIMEOUT_MS });
+};
 
 /* ---------- serasa ---------- */
 

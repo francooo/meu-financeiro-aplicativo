@@ -91,6 +91,13 @@ async function request(path, { method = "GET", body, timeout = DEFAULT_TIMEOUT_M
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeout);
 
+  /**
+   * FormData (upload de áudio do assistente) vai como está e SEM Content-Type
+   * explícito: o fetch do React Native precisa gerar o boundary do multipart
+   * sozinho. Forçar "multipart/form-data" sem boundary quebra o parse no servidor.
+   */
+  const isForm = typeof FormData !== "undefined" && body instanceof FormData;
+
   let res;
   try {
     const token = getToken();
@@ -99,10 +106,10 @@ async function request(path, { method = "GET", body, timeout = DEFAULT_TIMEOUT_M
       signal: controller.signal,
       headers: {
         Accept: "application/json",
-        ...(body ? { "Content-Type": "application/json" } : null),
+        ...(body && !isForm ? { "Content-Type": "application/json" } : null),
         ...(token ? { Authorization: `Bearer ${token}` } : null),
       },
-      body: body ? JSON.stringify(body) : undefined,
+      body: isForm ? body : body ? JSON.stringify(body) : undefined,
     });
   } catch (err) {
     if (err instanceof ApiError) throw err;

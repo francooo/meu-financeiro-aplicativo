@@ -39,9 +39,18 @@ meses são decididas na API. `src/lib/calc.js` só faz cálculo de exibição.
 
 ## Estado da integração
 
-As escritas granulares dependem do trabalho de backend no repositório do web e
-estão marcadas com `[FASE A]` em `src/api/endpoints.js`. Até serem publicadas,
-respondem 404.
+A criação de um item (`POST /api/expenses`, `/incomes`, `/wishlist`,
+`/shopping`) está marcada `[CRIAR]` em `src/api/endpoints.js` e existe na API a
+partir do merge da branch `assistente-web` do repositório do web. As demais
+escritas granulares (editar, apagar, reordenar) continuam `[FASE A]` e
+respondem 404 até serem publicadas.
+
+A assistente financeira (botão flutuante, `src/assistant/`) depende de
+`/api/assistant/chat` e `/api/assistant/transcribe`, marcadas `[FASE B]`. A
+chamada à Groq acontece na API, com `GROQ_API_KEY` na Vercel — nunca no app. A
+API só **propõe**; o app grava pelas rotas granulares depois da confirmação do
+usuário, com o id gerado quando a proposta chega (reusado no retry). A voz usa
+`expo-audio` e exige development build.
 
 ## `_reference/`
 

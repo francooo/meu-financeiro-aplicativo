@@ -59,6 +59,17 @@ export default {
             "Usar Face ID para desbloquear o aplicativo e proteger seus dados financeiros.",
         },
       ],
+      // Microfone para falar com a assistente. Adicionar este plugin exige um
+      // novo development build (permissão nativa RECORD_AUDIO / NSMicrophone).
+      [
+        "expo-audio",
+        {
+          microphonePermission:
+            "Usar o microfone para você falar com a assistente financeira.",
+          recordAudioAndroid: true,
+          enableBackgroundPlayback: false,
+        },
+      ],
     ],
 
     experiments: {

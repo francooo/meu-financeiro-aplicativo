@@ -8,6 +8,8 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient, startAppStateSync } from "./src/api/queryClient";
 import { AuthProvider, useAuth } from "./src/auth/AuthContext";
 import { MonthProvider } from "./src/state/MonthContext";
+import { AssistantProvider } from "./src/assistant/AssistantContext";
+import AssistantSheet from "./src/components/AssistantSheet";
 import { LoadingState } from "./src/components/ui";
 import LoginScreen from "./src/screens/LoginScreen";
 import RootNavigator from "./src/navigation";
@@ -49,7 +51,13 @@ function Gate() {
 
   return (
     <MonthProvider>
-      <RootNavigator />
+      {/* A assistente usa o mês selecionado, então fica dentro do MonthProvider.
+          O botão flutuante é desenhado pelo ScreenShell de cada aba; a folha
+          do chat é uma só, aqui, sobre o navegador. */}
+      <AssistantProvider>
+        <RootNavigator />
+        <AssistantSheet />
+      </AssistantProvider>
     </MonthProvider>
   );
 }
